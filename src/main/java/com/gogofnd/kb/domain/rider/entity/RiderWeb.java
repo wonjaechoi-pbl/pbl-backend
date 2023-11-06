@@ -44,7 +44,7 @@ public class RiderWeb extends BaseTimeEntity implements UserDetails {
 
     @Column(length = 20)
     private String name;
-    @Column(length = 20, unique = true)
+    @Column(length = 20)
     private String phone;
 
     @Column(length = 8)
