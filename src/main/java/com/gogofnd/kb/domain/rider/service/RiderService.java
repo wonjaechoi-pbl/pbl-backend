@@ -366,10 +366,10 @@ public class RiderService {
     }
 
     //시간제 라이더 메모
-    public void putCsMemo(UpdateCsMemoReq param) throws Exception {
-
-        riderRepositorySupport.updateCsMemo(param);
-    }
+//    public void putCsMemo(UpdateCsMemoReq param) throws Exception {
+//
+//        riderRepositorySupport.updateCsMemo(param);
+//    }
 
     //시간제 가입 상태 List 엑셀다운로드
     public String outputCsListExcel(HttpServletResponse response, RiderCsReq req) {

@@ -268,14 +268,14 @@ public class RiderRepositorySupport {
         return new PageImpl<>(resultRiderCs, pageable, totalCount);
     }
 
-    public void updateCsMemo(UpdateCsMemoReq param) {
-        queryFactory
-                .update(rider)
-                .set(rider.memo, param.getMemo())
-                .set(rider.memoWriter, param.getMemoWriter())
-                .where(rider.id.eq(param.getId()))
-                .execute();
-    }
+//    public void updateCsMemo(UpdateCsMemoReq param) {
+//        queryFactory
+//                .update(rider)
+//                .set(rider.memo, param.getMemo())
+//                .set(rider.memoWriter, param.getMemoWriter())
+//                .where(rider.id.eq(param.getId()))
+//                .execute();
+//    }
 
     public void updateRiderLoginId(UpdateLoginIdReq updateLoginIdReq) {
         queryFactory

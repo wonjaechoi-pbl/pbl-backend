@@ -2,6 +2,7 @@ server:
   port: 9888
   servlet:
     context-path: /api/goplan/
+    encoding:
       charset: UTF-8
       enabled: true
       force: true
@@ -10,9 +11,9 @@ spring:
   jwt:
     secret: gogofndgogosafe#!
   datasource:
-    url: jdbc:mariadb://cf.navers.co.kr/goPlan_KB?serverTimezone=Asia/Seoul
-    username: goplan
-    password: rhrhdpvmdosel0@
+    url: jdbc:mariadb://localhost:3306/goPlan_KB?serverTimezone=Asia/Seoul
+    username: root
+    password: 1234
     datasource: driver-class-name=org.mariadb.jdbc.Driver
   spring-doc:
     api-docs:

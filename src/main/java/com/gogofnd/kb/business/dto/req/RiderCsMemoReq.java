@@ -9,11 +9,11 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class UpdateCsMemoReq {
+public class RiderCsMemoReq {
 
-    private Long id;
+    private String loginId;
 
-    private String memo;
+    private String content;
 
-    private String memoWriter;
+    private String writer;
 }

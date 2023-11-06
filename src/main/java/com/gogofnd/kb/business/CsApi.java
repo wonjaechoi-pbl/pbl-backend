@@ -1,11 +1,14 @@
 package com.gogofnd.kb.business;
 
 import com.gogofnd.kb.business.dto.req.AddHistoryReq;
-import com.gogofnd.kb.business.dto.req.UpdateCsMemoReq;
 import com.gogofnd.kb.business.dto.req.CallsListReq;
+import com.gogofnd.kb.business.dto.req.RiderCsMemoReq;
 import com.gogofnd.kb.business.dto.res.CallsResultRes;
 import com.gogofnd.kb.domain.rider.dto.req.RiderCsReq;
 import com.gogofnd.kb.domain.rider.dto.res.RiderCsRes;
+import com.gogofnd.kb.domain.rider.entity.Rider;
+import com.gogofnd.kb.domain.rider.entity.RiderCsMemo;
+import com.gogofnd.kb.domain.rider.service.RiderCsService;
 import com.gogofnd.kb.domain.rider.service.RiderService;
 import com.gogofnd.kb.global.dto.request.MyPageRequest;
 import com.gogofnd.kb.global.dto.response.ApiPagingResponse;
@@ -28,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 public class CsApi {
 
     private final RiderService riderService;
+    private final RiderCsService riderCsService;
 
     @GetMapping("/insurance/list")
     @ApiOperation(value = "시간제 가입 상태 List", notes="시간제 가입 상태 List 조회")
@@ -42,10 +46,10 @@ public class CsApi {
         return new ApiPagingResponse<>(riderService.getRiderCsList(new MyPageRequest(page,limit).of(),new RiderCsReq(keyword, searchField, startDate,endDate)));
     }
 
-    @PutMapping("/update/memo")
+    @PostMapping("/memo")
     @ApiOperation(value = "시간제 라이더 메모", notes="시간제 가입 상태 List 화면에서 메모를 작성 할 수 있는 기능")
-    public void updateMemo(@RequestBody UpdateCsMemoReq param) throws Exception {
-        riderService.putCsMemo(param);
+    public ApiResponse<String> writeRiderCsMemo(@RequestBody RiderCsMemoReq req) throws Exception {
+        return new ApiResponse<>(riderCsService.writeCsMemo(req));
     }
 
     @GetMapping("/download/excel")
