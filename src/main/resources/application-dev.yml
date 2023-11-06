@@ -1,0 +1,47 @@
+server:
+  port: 9888
+  servlet:
+    context-path: /api/goplan/
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  jwt:
+    secret: gogofndgogosafe#!
+  datasource:
+    url: jdbc:mariadb://cf.navers.co.kr/goPlan_KB?serverTimezone=Asia/Seoul
+    username: goplan
+    password: rhrhdpvmdosel0@
+    datasource: driver-class-name=org.mariadb.jdbc.Driver
+  spring-doc:
+    api-docs:
+      groups:
+        enabled: true
+    swagger-ui:
+      path: /swagger-ui.html
+      displayRequestDuration: true
+      groups-order: DESC
+
+  jpa:
+    show-sql: true
+    open-in-view: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        default_batch_fetch_size: 1000
+
+app:
+  filePath: /home/develop3/images/
+  baseUrl: http://10.0.2.104:57509
+
+firebaseKey: /home/develop3/firebase/kb-flutter-8c87e-firebase-adminsdk-7yzva-e3283f39a5.json
+
+hash: gogofndgoplan#!%
