@@ -43,7 +43,7 @@ public class CsApi {
             @ApiParam(value = "시작 날짜 null 가능") @RequestParam(required = false) String startDate,
             @ApiParam(value = "끝나는 날짜 null 가능") @RequestParam(required = false) String endDate
     ) throws Exception{
-        return new ApiPagingResponse<>(riderService.getRiderCsList(new MyPageRequest(page,limit).of(),new RiderCsReq(keyword, searchField, startDate,endDate)));
+        return new ApiPagingResponse<>(riderCsService.getRiderCsList(new MyPageRequest(page,limit).of(),new RiderCsReq(keyword, searchField, startDate,endDate)));
     }
 
     @PostMapping("/memo")
