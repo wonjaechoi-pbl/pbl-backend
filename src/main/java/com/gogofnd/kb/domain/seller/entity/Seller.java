@@ -29,6 +29,10 @@ public class Seller extends BaseTimeEntity {
     private String seller_UID; // seller 식별자
     private int chargingPerHour;
 
+    private String bossName;
+    private String businessNumber;
+    private String address;
+
     private String policy_number;
 
     private String application_number;

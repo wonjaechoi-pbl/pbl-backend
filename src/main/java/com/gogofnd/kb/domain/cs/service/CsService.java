@@ -1,13 +1,7 @@
 package com.gogofnd.kb.domain.cs.service;
 
-import com.gogofnd.kb.domain.cs.dto.req.AccidentReq;
-import com.gogofnd.kb.domain.cs.dto.req.CallsSettlementReq;
-import com.gogofnd.kb.domain.cs.dto.req.InsureHistoryReq;
-import com.gogofnd.kb.domain.cs.dto.req.RealTimeCallsReq;
-import com.gogofnd.kb.domain.cs.dto.res.AccidentRes;
-import com.gogofnd.kb.domain.cs.dto.res.CallsSettlementRes;
-import com.gogofnd.kb.domain.cs.dto.res.InsureHistoryRes;
-import com.gogofnd.kb.domain.cs.dto.res.RealTimeCallsRes;
+import com.gogofnd.kb.domain.cs.dto.req.*;
+import com.gogofnd.kb.domain.cs.dto.res.*;
 import com.gogofnd.kb.domain.cs.repository.CsRepositorySupport;
 import com.gogofnd.kb.global.dto.response.PagingResponse;
 import lombok.RequiredArgsConstructor;
@@ -46,5 +40,11 @@ public class CsService {
     public PagingResponse<AccidentRes> selectAccidentList(Pageable pageable, AccidentReq req) throws Exception {
 
         return new PagingResponse<>(csRepositorySupport.selectAccidentList(pageable, req));
+    }
+
+    // 운영사 List 조회
+    public PagingResponse<SellerRes> selectSellerList(Pageable pageable, SellerReq req) throws Exception {
+
+        return new PagingResponse<>(csRepositorySupport.selectSellerList(pageable, req));
     }
 }

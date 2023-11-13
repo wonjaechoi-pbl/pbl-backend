@@ -1,13 +1,7 @@
 package com.gogofnd.kb.domain.cs.api;
 
-import com.gogofnd.kb.domain.cs.dto.req.AccidentReq;
-import com.gogofnd.kb.domain.cs.dto.req.CallsSettlementReq;
-import com.gogofnd.kb.domain.cs.dto.req.InsureHistoryReq;
-import com.gogofnd.kb.domain.cs.dto.req.RealTimeCallsReq;
-import com.gogofnd.kb.domain.cs.dto.res.AccidentRes;
-import com.gogofnd.kb.domain.cs.dto.res.CallsSettlementRes;
-import com.gogofnd.kb.domain.cs.dto.res.InsureHistoryRes;
-import com.gogofnd.kb.domain.cs.dto.res.RealTimeCallsRes;
+import com.gogofnd.kb.domain.cs.dto.req.*;
+import com.gogofnd.kb.domain.cs.dto.res.*;
 import com.gogofnd.kb.domain.cs.service.CsService;
 import com.gogofnd.kb.global.dto.request.MyPageRequest;
 import com.gogofnd.kb.global.dto.response.ApiPagingResponse;
@@ -63,5 +57,15 @@ public class CsController {
             AccidentReq req
     ) throws Exception{
         return new ApiPagingResponse<>(csService.selectAccidentList(new MyPageRequest(page,limit).of(), req));
+    }
+
+    @GetMapping("/seller/list")
+    @ApiOperation(value = "운영사 List 조회")
+    public ApiPagingResponse<SellerRes> SellerList(
+            @RequestParam (defaultValue = "1") int page,
+            @RequestParam (defaultValue = "10") int limit,
+            SellerReq req
+    ) throws Exception{
+        return new ApiPagingResponse<>(csService.selectSellerList(new MyPageRequest(page,limit).of(), req));
     }
 }

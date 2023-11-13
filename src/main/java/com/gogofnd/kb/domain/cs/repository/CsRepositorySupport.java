@@ -1,14 +1,8 @@
 package com.gogofnd.kb.domain.cs.repository;
 
 
-import com.gogofnd.kb.domain.cs.dto.req.AccidentReq;
-import com.gogofnd.kb.domain.cs.dto.req.CallsSettlementReq;
-import com.gogofnd.kb.domain.cs.dto.req.InsureHistoryReq;
-import com.gogofnd.kb.domain.cs.dto.req.RealTimeCallsReq;
-import com.gogofnd.kb.domain.cs.dto.res.AccidentRes;
-import com.gogofnd.kb.domain.cs.dto.res.CallsSettlementRes;
-import com.gogofnd.kb.domain.cs.dto.res.InsureHistoryRes;
-import com.gogofnd.kb.domain.cs.dto.res.RealTimeCallsRes;
+import com.gogofnd.kb.domain.cs.dto.req.*;
+import com.gogofnd.kb.domain.cs.dto.res.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -303,6 +297,55 @@ public class CsRepositorySupport {
                                 builder
                         )
                         .orderBy(accident.id.desc())
+                        .fetch()
+                        .size();
+        return new PageImpl<>(result, pageable, totalCount);
+    }
+
+    // 운영사 List 조회
+    public Page<SellerRes> selectSellerList(Pageable pageable, SellerReq req) {
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if(!ObjectUtils.isEmpty(req.getSellerName())) {
+            builder.and(seller.name.like("%" + req.getSellerName() + "%"));
+        }
+        if(!ObjectUtils.isEmpty(req.getBossName())) {
+            builder.and(seller.bossName.like("%" + req.getBossName() + "%"));
+        }
+        if(!ObjectUtils.isEmpty(req.getInsureType())) {
+            builder.and(seller.insureType.like("%" + req.getInsureType() + "%"));
+        }
+
+        List<SellerRes> result;
+        result = queryFactory
+                .select(Projections.fields(SellerRes.class,
+                        seller.cmpcd.as("cmpcd"),
+                        seller.name.as("sellerName"),
+                        seller.bossName.as("bossName"),
+                        seller.businessNumber.as("businessNumber"),
+                        seller.address.as("address"),
+                        seller.application_number.as("applicationNumber"),
+                        seller.policy_number.as("policyNumber"),
+                        seller.balance.as("balance"),
+                        seller.insureType.as("InsureType")
+                ))
+                .from(seller)
+                .where(
+                        builder
+                )
+                .orderBy(seller.cmpcd.asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        int totalCount =
+                queryFactory
+                        .selectFrom(seller)
+                        .where(
+                                builder
+                        )
+                        .orderBy(seller.cmpcd.asc())
                         .fetch()
                         .size();
         return new PageImpl<>(result, pageable, totalCount);
