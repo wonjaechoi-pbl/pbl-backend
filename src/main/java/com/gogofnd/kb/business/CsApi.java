@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/cs")
+@RequestMapping("/css")
 public class CsApi {
 
     private final RiderService riderService;
