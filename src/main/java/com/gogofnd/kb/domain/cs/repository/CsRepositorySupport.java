@@ -1,8 +1,12 @@
 package com.gogofnd.kb.domain.cs.repository;
 
 
+import com.gogofnd.kb.domain.cs.dto.req.AccidentReq;
+import com.gogofnd.kb.domain.cs.dto.req.CallsSettlementReq;
 import com.gogofnd.kb.domain.cs.dto.req.InsureHistoryReq;
 import com.gogofnd.kb.domain.cs.dto.req.RealTimeCallsReq;
+import com.gogofnd.kb.domain.cs.dto.res.AccidentRes;
+import com.gogofnd.kb.domain.cs.dto.res.CallsSettlementRes;
 import com.gogofnd.kb.domain.cs.dto.res.InsureHistoryRes;
 import com.gogofnd.kb.domain.cs.dto.res.RealTimeCallsRes;
 import com.querydsl.core.BooleanBuilder;
@@ -23,7 +27,9 @@ import static com.gogofnd.kb.domain.insurance.entity.QRejectMessage.rejectMessag
 import static com.gogofnd.kb.domain.insurance.entity.QRejectReason.rejectReason1;
 import static com.gogofnd.kb.domain.rider.entity.QRider.rider;
 import static com.gogofnd.kb.domain.seller.entity.QCall.call;
+import static com.gogofnd.kb.domain.seller.entity.QCallSettlement.callSettlement;
 import static com.gogofnd.kb.domain.seller.entity.QSeller.seller;
+import static com.gogofnd.kb.domain.delivery.entity.QAccident.accident;
 
 @RequiredArgsConstructor
 @Repository
@@ -188,6 +194,115 @@ public class CsRepositorySupport {
                                 builder
                         )
                         .orderBy(call.id.desc())
+                        .fetch()
+                        .size();
+        return new PageImpl<>(result, pageable, totalCount);
+    }
+
+    // 정산 운행 이력 List 조회
+    public Page<CallsSettlementRes> selectCallsSettlementList(Pageable pageable, CallsSettlementReq req) {
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if(!ObjectUtils.isEmpty(req.getGroupId())) {
+            builder.and(callSettlement.groupId.like("%" + req.getGroupId() + "%"));
+        }
+        if(!ObjectUtils.isEmpty(req.getName())) {
+            builder.and(callSettlement.rider.name.like("%" + req.getName() + "%"));
+        }
+        if(!ObjectUtils.isEmpty(req.getSellerName())) {
+            builder.and(callSettlement.rider.seller.name.like("%" + req.getSellerName() + "%"));
+        }
+        if(!ObjectUtils.isEmpty(req.getSettlementStatus())) {
+            builder.and(callSettlement.settlementStatus.like("%" + req.getSettlementStatus() + "%"));
+        }
+
+        List<CallsSettlementRes> result;
+        result = queryFactory
+                .select(Projections.fields(CallsSettlementRes.class,
+                        seller.name.as("sellerName"),
+                        rider.name.as("name"),
+                        callSettlement.groupId.as("groupId"),
+                        callSettlement.callPickUpTime.as("startDateTime"),
+                        callSettlement.callCompleteTime.as("endDateTime"),
+                        callSettlement.settlementStatus.as("settlementStatus"),
+                        callSettlement.balance.as("balance")
+                ))
+                .from(callSettlement)
+                .leftJoin(rider).on(callSettlement.rider.id.eq(rider.id))
+                .leftJoin(seller).on(rider.seller.id.eq(seller.id))
+                .where(
+//                        betweenDate(req)
+                        builder
+                )
+                .orderBy(callSettlement.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        int totalCount =
+                queryFactory
+                        .selectFrom(callSettlement)
+                        .leftJoin(rider).on(callSettlement.rider.id.eq(rider.id))
+                        .leftJoin(seller).on(rider.seller.id.eq(seller.id))
+                        .where(
+//                                betweenDate(req)
+                                builder
+                        )
+                        .orderBy(callSettlement.id.desc())
+                        .fetch()
+                        .size();
+        return new PageImpl<>(result, pageable, totalCount);
+    }
+
+    // 사고 이력 List 조회
+    public Page<AccidentRes> selectAccidentList(Pageable pageable, AccidentReq req) {
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if(!ObjectUtils.isEmpty(req.getName())) {
+            builder.and(accident.call.rider.name.like("%" + req.getName() + "%"));
+        }
+        if(!ObjectUtils.isEmpty(req.getSellerName())) {
+            builder.and(accident.call.rider.seller.name.like("%" + req.getSellerName() + "%"));
+        }
+        if(!ObjectUtils.isEmpty(req.getClaimNumber())) {
+            builder.and(accident.claimNumber.like("%" + req.getClaimNumber() + "%"));
+        }
+        if(!ObjectUtils.isEmpty(req.getCallId())) {
+            builder.and(accident.call.callId.like("%" + req.getCallId() + "%"));
+        }
+
+        List<AccidentRes> result;
+        result = queryFactory
+                .select(Projections.fields(AccidentRes.class,
+                        rider.seller.name.as("sellerName"),
+                        rider.name.as("name"),
+                        accident.claimNumber.as("claimNumber"),
+                        accident.claim_time.as("claimTime"),
+                        accident.accident_time.as("accidentTime"),
+                        call.callId.as("callId")
+                ))
+                .from(accident)
+                .leftJoin(call).on(accident.call.id.eq(call.id))
+                .leftJoin(rider).on(call.rider.id.eq(rider.id))
+                .where(
+                        builder
+                )
+                .orderBy(accident.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        int totalCount =
+                queryFactory
+                        .selectFrom(accident)
+                        .leftJoin(call).on(accident.call.id.eq(call.id))
+                        .leftJoin(rider).on(call.rider.id.eq(rider.id))
+                        .where(
+                                builder
+                        )
+                        .orderBy(accident.id.desc())
                         .fetch()
                         .size();
         return new PageImpl<>(result, pageable, totalCount);

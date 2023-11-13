@@ -1,7 +1,11 @@
 package com.gogofnd.kb.domain.cs.api;
 
+import com.gogofnd.kb.domain.cs.dto.req.AccidentReq;
+import com.gogofnd.kb.domain.cs.dto.req.CallsSettlementReq;
 import com.gogofnd.kb.domain.cs.dto.req.InsureHistoryReq;
 import com.gogofnd.kb.domain.cs.dto.req.RealTimeCallsReq;
+import com.gogofnd.kb.domain.cs.dto.res.AccidentRes;
+import com.gogofnd.kb.domain.cs.dto.res.CallsSettlementRes;
 import com.gogofnd.kb.domain.cs.dto.res.InsureHistoryRes;
 import com.gogofnd.kb.domain.cs.dto.res.RealTimeCallsRes;
 import com.gogofnd.kb.domain.cs.service.CsService;
@@ -39,5 +43,25 @@ public class CsController {
             RealTimeCallsReq req
     ) throws Exception{
         return new ApiPagingResponse<>(csService.selectRealTimeCallsList(new MyPageRequest(page,limit).of(), req));
+    }
+
+    @GetMapping("/calls/settlement/list")
+    @ApiOperation(value = "정산 운행 이력 List 조회")
+    public ApiPagingResponse<CallsSettlementRes> CallsSettlementList(
+            @RequestParam (defaultValue = "1") int page,
+            @RequestParam (defaultValue = "10") int limit,
+            CallsSettlementReq req
+    ) throws Exception{
+        return new ApiPagingResponse<>(csService.selectCallsSettlementList(new MyPageRequest(page,limit).of(), req));
+    }
+
+    @GetMapping("/accident/list")
+    @ApiOperation(value = "사고 이력 List 조회")
+    public ApiPagingResponse<AccidentRes> AccidentList(
+            @RequestParam (defaultValue = "1") int page,
+            @RequestParam (defaultValue = "10") int limit,
+            AccidentReq req
+    ) throws Exception{
+        return new ApiPagingResponse<>(csService.selectAccidentList(new MyPageRequest(page,limit).of(), req));
     }
 }
