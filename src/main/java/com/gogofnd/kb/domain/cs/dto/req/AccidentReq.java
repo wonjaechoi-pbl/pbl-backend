@@ -10,10 +10,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccidentReq {
-    // 현재 페이지
-    private Integer page;
-    // 페이지 당 row 수
-    private Integer limit;
     // 사고접수번호
     private String claimNumber;
     // 운행 ID

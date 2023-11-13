@@ -47,4 +47,10 @@ public class CsService {
 
         return new PagingResponse<>(csRepositorySupport.selectSellerList(pageable, req));
     }
+
+    // 보험사 예납금 이력 List 조회
+    public PagingResponse<KbBalanceHistoryRes> selectKbBalanceHistoryList(Pageable pageable, KbBalanceHistoryReq req) throws Exception {
+
+        return new PagingResponse<>(csRepositorySupport.selectKbBalanceHistoryList(pageable, req));
+    }
 }

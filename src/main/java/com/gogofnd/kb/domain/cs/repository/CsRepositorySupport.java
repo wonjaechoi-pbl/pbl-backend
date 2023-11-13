@@ -24,6 +24,7 @@ import static com.gogofnd.kb.domain.seller.entity.QCall.call;
 import static com.gogofnd.kb.domain.seller.entity.QCallSettlement.callSettlement;
 import static com.gogofnd.kb.domain.seller.entity.QSeller.seller;
 import static com.gogofnd.kb.domain.delivery.entity.QAccident.accident;
+import static com.gogofnd.kb.domain.delivery.entity.QKbBalancesHistory.kbBalancesHistory;
 
 @RequiredArgsConstructor
 @Repository
@@ -346,6 +347,50 @@ public class CsRepositorySupport {
                                 builder
                         )
                         .orderBy(seller.cmpcd.asc())
+                        .fetch()
+                        .size();
+        return new PageImpl<>(result, pageable, totalCount);
+    }
+
+    // 보험사 예납금 이력 List 조회
+    public Page<KbBalanceHistoryRes> selectKbBalanceHistoryList(Pageable pageable, KbBalanceHistoryReq req) {
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if(!ObjectUtils.isEmpty(req.getSellerName())) {
+            builder.and(seller.name.like("%" + req.getSellerName() + "%"));
+        }
+//        if(!ObjectUtils.isEmpty(req.getDate())) {
+//            builder.and(seller.bossName.like("%" + req.getBossName() + "%"));
+//        }
+
+        List<KbBalanceHistoryRes> result;
+        result = queryFactory
+                .select(Projections.fields(KbBalanceHistoryRes.class,
+                        seller.name.as("sellerName"),
+                        kbBalancesHistory.balance.as("balance"),
+                        kbBalancesHistory.cmpcd.as("cmpcd"),
+                        kbBalancesHistory.date.as("date"),
+                        kbBalancesHistory.useAmt.as("useAmt")
+                ))
+                .from(kbBalancesHistory)
+                .leftJoin(seller).on(kbBalancesHistory.cmpcd.eq(seller.cmpcd))
+                .where(
+                        builder
+                )
+                .orderBy(kbBalancesHistory.cmpcd.asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        int totalCount =
+                queryFactory
+                        .selectFrom(kbBalancesHistory)
+                        .leftJoin(seller).on(kbBalancesHistory.cmpcd.eq(seller.cmpcd))
+                        .where(
+                                builder
+                        )
+                        .orderBy(kbBalancesHistory.cmpcd.asc())
                         .fetch()
                         .size();
         return new PageImpl<>(result, pageable, totalCount);

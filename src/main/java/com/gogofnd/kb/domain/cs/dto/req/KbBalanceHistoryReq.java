@@ -9,11 +9,9 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SellerReq {
+public class KbBalanceHistoryReq {
     // 운영사
     private String sellerName;
-    // 대표자명
-    private String bossName;
-    // 보험종류
-    private String InsureType;
+    // 처리일시
+    private LocalDateTime date;
 }

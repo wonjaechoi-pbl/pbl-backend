@@ -68,4 +68,14 @@ public class CsController {
     ) throws Exception{
         return new ApiPagingResponse<>(csService.selectSellerList(new MyPageRequest(page,limit).of(), req));
     }
+
+    @GetMapping("/kb/balance/history/list")
+    @ApiOperation(value = "보험사 예납금 이력 List 조회")
+    public ApiPagingResponse<KbBalanceHistoryRes> kbBalanceHistoryList(
+            @RequestParam (defaultValue = "1") int page,
+            @RequestParam (defaultValue = "10") int limit,
+            KbBalanceHistoryReq req
+    ) throws Exception{
+        return new ApiPagingResponse<>(csService.selectKbBalanceHistoryList(new MyPageRequest(page,limit).of(), req));
+    }
 }

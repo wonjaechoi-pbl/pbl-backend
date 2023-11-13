@@ -10,10 +10,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CallsSettlementReq {
-    // 현재 페이지
-    private Integer page;
-    // 페이지 당 row 수
-    private Integer limit;
     // 정산(그룹) ID
     private String groupId;
     // 이름
