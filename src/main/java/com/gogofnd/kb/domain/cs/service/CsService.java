@@ -1,7 +1,9 @@
 package com.gogofnd.kb.domain.cs.service;
 
 import com.gogofnd.kb.domain.cs.dto.req.InsureHistoryReq;
+import com.gogofnd.kb.domain.cs.dto.req.RealTimeCallsReq;
 import com.gogofnd.kb.domain.cs.dto.res.InsureHistoryRes;
+import com.gogofnd.kb.domain.cs.dto.res.RealTimeCallsRes;
 import com.gogofnd.kb.domain.cs.repository.CsRepositorySupport;
 import com.gogofnd.kb.global.dto.response.PagingResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +22,10 @@ public class CsService {
     public PagingResponse<InsureHistoryRes> selectInsureHistoryList(Pageable pageable, InsureHistoryReq req) throws Exception {
 
         return new PagingResponse<>(csRepositorySupport.selectInsureHistoryList(pageable, req));
+    }
+
+    public PagingResponse<RealTimeCallsRes> selectRealTimeCallsList(Pageable pageable, RealTimeCallsReq req) throws Exception {
+
+        return new PagingResponse<>(csRepositorySupport.selectRealTimeCallsList(pageable, req));
     }
 }

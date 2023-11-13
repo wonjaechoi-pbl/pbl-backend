@@ -1,7 +1,9 @@
 package com.gogofnd.kb.domain.cs.api;
 
 import com.gogofnd.kb.domain.cs.dto.req.InsureHistoryReq;
+import com.gogofnd.kb.domain.cs.dto.req.RealTimeCallsReq;
 import com.gogofnd.kb.domain.cs.dto.res.InsureHistoryRes;
+import com.gogofnd.kb.domain.cs.dto.res.RealTimeCallsRes;
 import com.gogofnd.kb.domain.cs.service.CsService;
 import com.gogofnd.kb.global.dto.request.MyPageRequest;
 import com.gogofnd.kb.global.dto.response.ApiPagingResponse;
@@ -27,5 +29,15 @@ public class CsController {
             InsureHistoryReq req
     ) throws Exception{
         return new ApiPagingResponse<>(csService.selectInsureHistoryList(new MyPageRequest(page,limit).of(), req));
+    }
+
+    @GetMapping("/calls/list")
+    @ApiOperation(value = "실시간 운행 이력 List 조회")
+    public ApiPagingResponse<RealTimeCallsRes> RealTimeCallsList(
+            @RequestParam (defaultValue = "1") int page,
+            @RequestParam (defaultValue = "10") int limit,
+            RealTimeCallsReq req
+    ) throws Exception{
+        return new ApiPagingResponse<>(csService.selectRealTimeCallsList(new MyPageRequest(page,limit).of(), req));
     }
 }

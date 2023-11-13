@@ -2,12 +2,9 @@ package com.gogofnd.kb.domain.cs.repository;
 
 
 import com.gogofnd.kb.domain.cs.dto.req.InsureHistoryReq;
+import com.gogofnd.kb.domain.cs.dto.req.RealTimeCallsReq;
 import com.gogofnd.kb.domain.cs.dto.res.InsureHistoryRes;
-import com.gogofnd.kb.domain.rider.dto.req.RiderCsReq;
-import com.gogofnd.kb.domain.rider.dto.res.RiderCsRes;
-import com.gogofnd.kb.domain.rider.entity.Rider;
-import com.gogofnd.kb.global.error.exception.BusinessException;
-import com.gogofnd.kb.global.error.model.ErrorCode;
+import com.gogofnd.kb.domain.cs.dto.res.RealTimeCallsRes;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -21,11 +18,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
-import java.util.Objects;
 
 import static com.gogofnd.kb.domain.insurance.entity.QRejectMessage.rejectMessage1;
 import static com.gogofnd.kb.domain.insurance.entity.QRejectReason.rejectReason1;
 import static com.gogofnd.kb.domain.rider.entity.QRider.rider;
+import static com.gogofnd.kb.domain.seller.entity.QCall.call;
+import static com.gogofnd.kb.domain.seller.entity.QSeller.seller;
 
 @RequiredArgsConstructor
 @Repository
@@ -45,6 +43,7 @@ public class CsRepositorySupport {
 //        return resultRider;
 //    }
 
+    // 보험 가입 상태 List 조회
     public Page<InsureHistoryRes> selectInsureHistoryList(Pageable pageable, InsureHistoryReq req) {
 
         BooleanBuilder builder = new BooleanBuilder();
@@ -132,6 +131,66 @@ public class CsRepositorySupport {
                         .fetch()
                         .size();
         return new PageImpl<>(resultRiderCs, pageable, totalCount);
+    }
+
+    // 실시간 운행 이력 List 조회
+    public Page<RealTimeCallsRes> selectRealTimeCallsList(Pageable pageable, RealTimeCallsReq req) {
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if(!ObjectUtils.isEmpty(req.getCallId())) {
+            builder.and(call.callId.like("%" + req.getCallId() + "%"));
+        }
+        if(!ObjectUtils.isEmpty(req.getGroupId())) {
+            builder.and(call.groupId.like("%" + req.getGroupId() + "%"));
+        }
+        if(!ObjectUtils.isEmpty(req.getName())) {
+            builder.and(call.rider.name.like("%" + req.getName() + "%"));
+        }
+        if(!ObjectUtils.isEmpty(req.getDeliveryStatus())) {
+            builder.and(call.delivery_status.like("%" + req.getDeliveryStatus() + "%"));
+        }
+        if(!ObjectUtils.isEmpty(req.getSellerName())) {
+            builder.and(call.rider.seller.name.like("%" + req.getSellerName() + "%"));
+        }
+
+        List<RealTimeCallsRes> result;
+        result = queryFactory
+                .select(Projections.fields(RealTimeCallsRes.class,
+                        seller.name.as("sellerName"),
+                        rider.name.as("name"),
+                        call.callId.as("callId"),
+                        call.groupId.as("groupId"),
+                        call.callAppointTime.as("startDateTime"),
+                        call.callCompleteTime.as("endDateTime"),
+                        call.delivery_status.as("deliveryStatus"),
+                        call.kb_call_id.as("kbCallId")
+                ))
+                .from(call)
+                .leftJoin(rider).on(call.rider.id.eq(rider.id))
+                .leftJoin(seller).on(rider.seller.id.eq(seller.id))
+                .where(
+//                        betweenDate(req)
+                        builder
+                )
+                .orderBy(call.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        int totalCount =
+                queryFactory
+                        .selectFrom(call)
+                        .leftJoin(rider).on(call.rider.id.eq(rider.id))
+                        .leftJoin(seller).on(rider.seller.id.eq(seller.id))
+                        .where(
+//                                betweenDate(req)
+                                builder
+                        )
+                        .orderBy(call.id.desc())
+                        .fetch()
+                        .size();
+        return new PageImpl<>(result, pageable, totalCount);
     }
 
     private BooleanExpression betweenDate(InsureHistoryReq req){
