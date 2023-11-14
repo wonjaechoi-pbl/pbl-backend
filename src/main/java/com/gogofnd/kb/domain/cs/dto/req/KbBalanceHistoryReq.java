@@ -13,5 +13,5 @@ public class KbBalanceHistoryReq {
     // 운영사
     private String sellerName;
     // 처리일시
-    private LocalDateTime date;
+    private String date;
 }

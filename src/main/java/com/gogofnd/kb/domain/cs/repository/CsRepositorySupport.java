@@ -9,12 +9,16 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static com.gogofnd.kb.domain.insurance.entity.QRejectMessage.rejectMessage1;
@@ -28,6 +32,7 @@ import static com.gogofnd.kb.domain.delivery.entity.QKbBalancesHistory.kbBalance
 
 @RequiredArgsConstructor
 @Repository
+@Slf4j
 public class CsRepositorySupport {
     private final JPAQueryFactory queryFactory;
 
@@ -67,7 +72,9 @@ public class CsRepositorySupport {
         if(!ObjectUtils.isEmpty(req.getUseYn())) {
             builder.and(rider.useYn.like("%" + req.getUseYn() + "%"));
         }
-
+        if(!ObjectUtils.isEmpty(req.getStartDate()) && !ObjectUtils.isEmpty(req.getEndDate())) {
+            builder.and(rider.createdDate.between(stringToDate(req.getStartDate()), stringToDate(req.getEndDate()).plusDays(1)));
+        }
 
         List<InsureHistoryRes> resultRiderCs = queryFactory
                 .select(Projections.fields(InsureHistoryRes.class,
@@ -108,8 +115,7 @@ public class CsRepositorySupport {
                 .leftJoin(rejectReason1).on(rejectReason1.rider.id.eq(rider.id))
                 .leftJoin(rejectMessage1).on(rejectReason1.rejectReason.eq(rejectMessage1.rejectReason))
                 .where(
-                        betweenDate(req)
-                        , builder
+                        builder
                 )
                 .groupBy(rider.id)
                 .orderBy(rider.createdDate.desc())
@@ -124,8 +130,7 @@ public class CsRepositorySupport {
                         .leftJoin(rejectReason1).on(rejectReason1.rider.id.eq(rider.id))
                         .leftJoin(rejectMessage1).on(rejectReason1.rejectReason.eq(rejectMessage1.rejectReason))
                         .where(
-                                betweenDate(req)
-                                , builder
+                                builder
                         )
                         .groupBy(rider.id)
                         .orderBy(rider.createdDate.desc())
@@ -154,6 +159,10 @@ public class CsRepositorySupport {
         if(!ObjectUtils.isEmpty(req.getSellerName())) {
             builder.and(call.rider.seller.name.like("%" + req.getSellerName() + "%"));
         }
+        if(!ObjectUtils.isEmpty(req.getStartDateTime()) && !ObjectUtils.isEmpty(req.getEndDateTime())) {
+            builder.and(call.callAppointTime.goe(stringToDateTime(req.getStartDateTime())));
+            builder.and(call.callCompleteTime.loe(stringToDateTime(req.getEndDateTime())));
+        }
 
         List<RealTimeCallsRes> result;
         result = queryFactory
@@ -171,7 +180,6 @@ public class CsRepositorySupport {
                 .leftJoin(rider).on(call.rider.id.eq(rider.id))
                 .leftJoin(seller).on(rider.seller.id.eq(seller.id))
                 .where(
-//                        betweenDate(req)
                         builder
                 )
                 .orderBy(call.id.desc())
@@ -185,7 +193,6 @@ public class CsRepositorySupport {
                         .leftJoin(rider).on(call.rider.id.eq(rider.id))
                         .leftJoin(seller).on(rider.seller.id.eq(seller.id))
                         .where(
-//                                betweenDate(req)
                                 builder
                         )
                         .orderBy(call.id.desc())
@@ -211,6 +218,10 @@ public class CsRepositorySupport {
         if(!ObjectUtils.isEmpty(req.getSettlementStatus())) {
             builder.and(callSettlement.settlementStatus.like("%" + req.getSettlementStatus() + "%"));
         }
+        if(!ObjectUtils.isEmpty(req.getStartDateTime()) && !ObjectUtils.isEmpty(req.getEndDateTime())) {
+            builder.and(callSettlement.callPickUpTime.goe(stringToDateTime(req.getStartDateTime())));
+            builder.and(callSettlement.callCompleteTime.loe(stringToDateTime(req.getEndDateTime())));
+        }
 
         List<CallsSettlementRes> result;
         result = queryFactory
@@ -227,7 +238,6 @@ public class CsRepositorySupport {
                 .leftJoin(rider).on(callSettlement.rider.id.eq(rider.id))
                 .leftJoin(seller).on(rider.seller.id.eq(seller.id))
                 .where(
-//                        betweenDate(req)
                         builder
                 )
                 .orderBy(callSettlement.id.desc())
@@ -241,7 +251,6 @@ public class CsRepositorySupport {
                         .leftJoin(rider).on(callSettlement.rider.id.eq(rider.id))
                         .leftJoin(seller).on(rider.seller.id.eq(seller.id))
                         .where(
-//                                betweenDate(req)
                                 builder
                         )
                         .orderBy(callSettlement.id.desc())
@@ -266,6 +275,12 @@ public class CsRepositorySupport {
         }
         if(!ObjectUtils.isEmpty(req.getCallId())) {
             builder.and(accident.call.callId.like("%" + req.getCallId() + "%"));
+        }
+        if(!ObjectUtils.isEmpty(req.getAccidentTime())) {
+            builder.and(accident.accident_time.between(stringToDate(req.getAccidentTime()),stringToDate(req.getAccidentTime()).plusDays(1)));
+        }
+        if(!ObjectUtils.isEmpty(req.getClaimTime())) {
+            builder.and(accident.claim_time.between(stringToDate(req.getClaimTime()),stringToDate(req.getClaimTime()).plusDays(1)));
         }
 
         List<AccidentRes> result;
@@ -360,9 +375,9 @@ public class CsRepositorySupport {
         if(!ObjectUtils.isEmpty(req.getSellerName())) {
             builder.and(seller.name.like("%" + req.getSellerName() + "%"));
         }
-//        if(!ObjectUtils.isEmpty(req.getDate())) {
-//            builder.and(seller.bossName.like("%" + req.getBossName() + "%"));
-//        }
+        if(!ObjectUtils.isEmpty(req.getDate())) {
+            builder.and(kbBalancesHistory.date.between(stringToDateSec(req.getDate()),stringToDateSec(req.getDate())));
+        }
 
         List<KbBalanceHistoryRes> result;
         result = queryFactory
@@ -396,9 +411,21 @@ public class CsRepositorySupport {
         return new PageImpl<>(result, pageable, totalCount);
     }
 
-    private BooleanExpression betweenDate(InsureHistoryReq req){
-        if(req.getStartDate() == null || req.getEndDate() == null) return null;
+    private LocalDateTime stringToDateTime(String dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        return rider.createdDate.between(req.getStartDate(), req.getEndDate().plusDays(1));
+        return LocalDateTime.parse(dateTime, formatter);
+    }
+
+    private LocalDate stringToDateSec(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        return LocalDate.parse(date, formatter);
+    }
+
+    private LocalDateTime stringToDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        return LocalDate.parse(date, formatter).atStartOfDay();
     }
 }

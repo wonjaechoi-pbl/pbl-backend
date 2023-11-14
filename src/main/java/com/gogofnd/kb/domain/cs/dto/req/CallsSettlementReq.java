@@ -19,7 +19,7 @@ public class CallsSettlementReq {
     // 정산여부
     private String settlementStatus;
     // 배달시작시간
-    private LocalDateTime startDateTime;
+    private String startDateTime;
     // 배달종료시간
-    private LocalDateTime endDateTime;
+    private String endDateTime;
 }

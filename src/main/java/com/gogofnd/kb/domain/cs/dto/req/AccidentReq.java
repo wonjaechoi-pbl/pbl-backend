@@ -19,7 +19,7 @@ public class AccidentReq {
     // 운영사
     private String sellerName;
     // 사고접수일시
-    private LocalDateTime claimTime;
+    private String claimTime;
     // 사고발생일시
-    private LocalDateTime accidentTime;
+    private String accidentTime;
 }

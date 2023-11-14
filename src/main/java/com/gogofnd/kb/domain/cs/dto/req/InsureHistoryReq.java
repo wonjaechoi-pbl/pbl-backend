@@ -23,7 +23,7 @@ public class InsureHistoryReq {
     // 사용여부
     private String useYn;
     // 가입일 (start)
-    private LocalDateTime startDate;
+    private String startDate;
     // 가입일 (end)
-    private LocalDateTime endDate;
+    private String endDate;
 }

@@ -21,7 +21,7 @@ public class RealTimeCallsReq {
     // 운영사
     private String sellerName;
     // 배달시작시간
-    private LocalDateTime startDateTime;
+    private String startDateTime;
     // 배달종료시간
-    private LocalDateTime endDateTime;
+    private String endDateTime;
 }
