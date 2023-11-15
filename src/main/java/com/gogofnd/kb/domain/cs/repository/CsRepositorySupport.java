@@ -170,8 +170,41 @@ public class CsRepositorySupport {
                 .from(history)
                 .leftJoin(rejectReason1).on(history.rider.id.eq(rejectReason1.rider.id))
                 .leftJoin(rejectMessage1).on(rejectReason1.rejectReason.eq(rejectMessage1.rejectReason))
+                .where(history.rider.loginId.eq(loginId))
                 .orderBy(history.createdDate.desc())
                 .fetch();
+    }
+
+    // 보험 가입 상태 List 조회
+    public RiderInfoDetailRes selectRiderInfoDetail(String loginId) {
+
+        return queryFactory
+                .select(Projections.fields(RiderInfoDetailRes.class,
+                        rider.name.as("name"),
+                        rider.phone.as("phone"),
+                        rider.birthDate.as("birthDate"),
+                        rider.vcNumber.as("vcnoHnglNm"),
+                        rider.driver_id.as("driverId"),
+                        rider.region.as("region"),
+                        rider.loginId.as("loginId"),
+                        rider.insuranceStatus.as("status"),
+                        rider.mtdt.as("mtdt"),
+                        rider.oprn_purp.as("oprnPurp"),
+                        rider.effectiveStartDate.as("effectiveStartDate"),
+                        rider.effectiveEndDate.as("effectiveEndDate"),
+                        rider.seller.policy_number.as("policyNumber"),
+                        rider.createdDate.as("createdDate"),
+                        rider.deletedDate.as("deletedDate"),
+                        rider.modifiedDate.as("modifiedDate"),
+                        rider.seller.name.as("sellerName"),
+                        rider.totalWebViewUrl.as("totalWebViewUrl"),
+                        rider.seller.application_number.as("applicationNumber"),
+                        rider.useYn.as("useYn"),
+                        rider.payStatus.as("payStatus")
+                ))
+                .from(rider)
+                .where(rider.loginId.eq(loginId))
+                .fetchOne();
     }
 
     // 실시간 운행 이력 List 조회

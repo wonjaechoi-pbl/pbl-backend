@@ -37,6 +37,12 @@ public class CsController {
         return csService.selectInsureHistoryDetailList(loginId);
     }
 
+    @GetMapping("/rider/detail")
+    @ApiOperation(value = "라이더 정보 상세 조회")
+    public RiderInfoDetailRes RiderInfoDetail(@RequestParam String loginId) throws Exception{
+        return csService.selectRiderInfoDetail(loginId);
+    }
+
     @GetMapping("/calls/list")
     @ApiOperation(value = "실시간 운행 이력 List 조회")
     public ApiPagingResponse<RealTimeCallsRes> RealTimeCallsList(

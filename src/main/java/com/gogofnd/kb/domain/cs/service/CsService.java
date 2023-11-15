@@ -32,6 +32,12 @@ public class CsService {
         return csRepositorySupport.selectInsureHistoryDetailList(loginId);
     }
 
+    // 보험 가입 상태 이력 List 조회
+    public RiderInfoDetailRes selectRiderInfoDetail(String loginId) throws Exception {
+
+        return csRepositorySupport.selectRiderInfoDetail(loginId);
+    }
+
     // 실시간 운행 이력 List 조회
     public PagingResponse<RealTimeCallsRes> selectRealTimeCallsList(Pageable pageable, RealTimeCallsReq req) throws Exception {
 
