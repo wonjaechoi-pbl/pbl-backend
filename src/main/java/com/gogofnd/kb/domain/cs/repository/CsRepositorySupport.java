@@ -435,6 +435,33 @@ public class CsRepositorySupport {
         return new PageImpl<>(result, pageable, totalCount);
     }
 
+    public SellerInfoDetailRes selectSellerInfoDetail(String cmpcd) {
+        return queryFactory
+                .select(Projections.fields(SellerInfoDetailRes.class,
+                        seller.createdDate.as("createdDate"),
+                        seller.modifiedDate.as("modifiedDate"),
+                        seller.cmpcd.as("cmpcd"),
+                        seller.name.as("sellerName"),
+                        seller.bossName.as("bossName"),
+                        seller.businessNumber.as("businessNumber"),
+                        seller.address.as("address"),
+                        seller.application_number.as("applicationNumber"),
+                        seller.policy_number.as("policyNumber"),
+                        seller.balance.as("balance"),
+                        seller.insureType.as("InsureType"),
+                        seller.sellerCode.as("sellerCode"),
+                        seller.apiKey.as("apiKey"),
+                        seller.first_bd_fee.as("firstBdFee"),
+                        seller.second_bd_fee.as("secondBdFee"),
+                        seller.pd_fee.as("pdFee"),
+                        seller.flat_rate.as("flatRate"),
+                        seller.discount_rate.as("discountRate")
+                ))
+                .from(seller)
+                .where(seller.cmpcd.eq(cmpcd))
+                .fetchOne();
+    }
+
     // 보험사 예납금 이력 List 조회
     public Page<KbBalanceHistoryRes> selectKbBalanceHistoryList(Pageable pageable, KbBalanceHistoryReq req) {
 

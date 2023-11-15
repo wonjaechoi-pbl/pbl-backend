@@ -62,6 +62,12 @@ public class CsService {
         return new PagingResponse<>(csRepositorySupport.selectSellerList(pageable, req));
     }
 
+    // 운영사 List 조회
+    public SellerInfoDetailRes selectSellerInfoDetail(String cmpcd) throws Exception {
+
+        return csRepositorySupport.selectSellerInfoDetail(cmpcd);
+    }
+
     // 보험사 예납금 이력 List 조회
     public PagingResponse<KbBalanceHistoryRes> selectKbBalanceHistoryList(Pageable pageable, KbBalanceHistoryReq req) throws Exception {
 

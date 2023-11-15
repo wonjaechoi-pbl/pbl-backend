@@ -83,6 +83,12 @@ public class CsController {
         return new ApiPagingResponse<>(csService.selectSellerList(new MyPageRequest(page,limit).of(), req));
     }
 
+    @GetMapping("/seller/detail")
+    @ApiOperation(value = "운영사 정보 상세 조회")
+    public SellerInfoDetailRes SellerInfoDetail(@RequestParam String cmpcd) throws Exception{
+        return csService.selectSellerInfoDetail(cmpcd);
+    }
+
     @GetMapping("/kb/balance/history/list")
     @ApiOperation(value = "보험사 예납금 이력 List 조회")
     public ApiPagingResponse<KbBalanceHistoryRes> kbBalanceHistoryList(

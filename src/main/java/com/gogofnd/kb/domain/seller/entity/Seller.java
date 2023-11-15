@@ -33,6 +33,8 @@ public class Seller extends BaseTimeEntity {
     private String businessNumber;
     private String address;
 
+    private String apiKey;
+
     private String policy_number;
 
     private String application_number;
