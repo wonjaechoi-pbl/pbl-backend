@@ -8,7 +8,6 @@ import com.gogofnd.kb.global.error.exception.BusinessException;
 import com.gogofnd.kb.global.error.model.ErrorCode;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +23,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static com.gogofnd.kb.domain.insurance.entity.QRejectMessage.rejectMessage1;
-import static com.gogofnd.kb.domain.insurance.entity.QRejectReason.rejectReason1;
-import static com.gogofnd.kb.domain.rider.entity.QRider.rider;
-import static com.gogofnd.kb.domain.seller.entity.QCall.call;
-import static com.gogofnd.kb.domain.seller.entity.QCallSettlement.callSettlement;
-import static com.gogofnd.kb.domain.seller.entity.QSeller.seller;
 import static com.gogofnd.kb.domain.delivery.entity.QAccident.accident;
 import static com.gogofnd.kb.domain.delivery.entity.QKbBalancesHistory.kbBalancesHistory;
 import static com.gogofnd.kb.domain.insurance.entity.QHistory.history;
+import static com.gogofnd.kb.domain.insurance.entity.QRejectMessage.rejectMessage1;
+import static com.gogofnd.kb.domain.insurance.entity.QRejectReason.rejectReason1;
+import static com.gogofnd.kb.domain.rider.entity.QRider.rider;
+import static com.gogofnd.kb.domain.rider.entity.QRiderCsMemo.riderCsMemo;
+import static com.gogofnd.kb.domain.seller.entity.QCall.call;
+import static com.gogofnd.kb.domain.seller.entity.QCallSettlement.callSettlement;
+import static com.gogofnd.kb.domain.seller.entity.QSeller.seller;
 
 @RequiredArgsConstructor
 @Repository
@@ -508,6 +508,24 @@ public class CsRepositorySupport {
                         .fetch()
                         .size();
         return new PageImpl<>(result, pageable, totalCount);
+    }
+
+    // 메모 이력 조회
+    public List<MemoDetailRes> selectCsMemoDetailList(String loginId) {
+
+        return queryFactory
+                .select(Projections.fields(MemoDetailRes.class,
+                        riderCsMemo.id.as("id"),
+                        riderCsMemo.rider.loginId.as("loginId"),
+                        riderCsMemo.content.as("content"),
+                        riderCsMemo.writer.as("writer"),
+                        riderCsMemo.createdDate.as("createdDate"),
+                        riderCsMemo.modifiedDate.as("modifiedDate")
+                ))
+                .from(riderCsMemo)
+                .where(riderCsMemo.rider.loginId.eq(loginId))
+                .orderBy(riderCsMemo.createdDate.desc())
+                .fetch();
     }
 
     private LocalDateTime stringToDateTime(String dateTime) {

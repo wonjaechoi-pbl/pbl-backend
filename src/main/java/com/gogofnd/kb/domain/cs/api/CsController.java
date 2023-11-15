@@ -28,7 +28,7 @@ public class CsController {
 
     @GetMapping("/insurance/list")
     @ApiOperation(value = "보험 가입 상태 List 조회")
-    public ApiPagingResponse<InsureHistoryRes> InsureHistoryList(
+    public ApiPagingResponse<InsureHistoryRes> insureHistoryList(
             @RequestParam (defaultValue = "1") int page,
             @RequestParam (defaultValue = "10") int limit,
             InsureHistoryReq req
@@ -38,19 +38,19 @@ public class CsController {
 
     @GetMapping("/insurance/detail")
     @ApiOperation(value = "보험 가입 상태 이력 List 조회")
-    public List<InsureHistoryDetailRes> InsureHistoryDetailList(@RequestParam String loginId) throws Exception{
+    public List<InsureHistoryDetailRes> insureHistoryDetailList(@RequestParam String loginId) throws Exception{
         return csService.selectInsureHistoryDetailList(loginId);
     }
 
     @GetMapping("/rider/detail")
     @ApiOperation(value = "라이더 정보 상세 조회")
-    public RiderInfoDetailRes RiderInfoDetail(@RequestParam String loginId) throws Exception{
+    public RiderInfoDetailRes riderInfoDetail(@RequestParam String loginId) throws Exception{
         return csService.selectRiderInfoDetail(loginId);
     }
 
     @GetMapping("/calls/list")
     @ApiOperation(value = "실시간 운행 이력 List 조회")
-    public ApiPagingResponse<RealTimeCallsRes> RealTimeCallsList(
+    public ApiPagingResponse<RealTimeCallsRes> realTimeCallsList(
             @RequestParam (defaultValue = "1") int page,
             @RequestParam (defaultValue = "10") int limit,
             RealTimeCallsReq req
@@ -60,7 +60,7 @@ public class CsController {
 
     @GetMapping("/calls/settlement/list")
     @ApiOperation(value = "정산 운행 이력 List 조회")
-    public ApiPagingResponse<CallsSettlementRes> CallsSettlementList(
+    public ApiPagingResponse<CallsSettlementRes> callsSettlementList(
             @RequestParam (defaultValue = "1") int page,
             @RequestParam (defaultValue = "10") int limit,
             CallsSettlementReq req
@@ -70,7 +70,7 @@ public class CsController {
 
     @GetMapping("/accident/list")
     @ApiOperation(value = "사고 이력 List 조회")
-    public ApiPagingResponse<AccidentRes> AccidentList(
+    public ApiPagingResponse<AccidentRes> accidentList(
             @RequestParam (defaultValue = "1") int page,
             @RequestParam (defaultValue = "10") int limit,
             AccidentReq req
@@ -80,7 +80,7 @@ public class CsController {
 
     @GetMapping("/seller/list")
     @ApiOperation(value = "운영사 List 조회")
-    public ApiPagingResponse<SellerRes> SellerList(
+    public ApiPagingResponse<SellerRes> sellerList(
             @RequestParam (defaultValue = "1") int page,
             @RequestParam (defaultValue = "10") int limit,
             SellerReq req
@@ -90,7 +90,7 @@ public class CsController {
 
     @GetMapping("/seller/detail")
     @ApiOperation(value = "운영사 정보 상세 조회")
-    public SellerInfoDetailRes SellerInfoDetail(@RequestParam String cmpcd) throws Exception{
+    public SellerInfoDetailRes sellerInfoDetail(@RequestParam String cmpcd) throws Exception{
         return csService.selectSellerInfoDetail(cmpcd);
     }
 
@@ -118,8 +118,14 @@ public class CsController {
     }
 
     @PostMapping("/memo/write")
-    @ApiOperation(value = "시간제 라이더 메모", notes="시간제 가입 상태 List 화면에서 메모를 작성 할 수 있는 기능")
-    public ApiResponse<String> writeRiderCsMemo(@RequestBody RiderCsMemoReq req) throws Exception {
+    @ApiOperation(value = "메모 작성")
+    public ApiResponse<String> csMemoWrite(@RequestBody RiderCsMemoReq req) throws Exception {
         return new ApiResponse<>(csService.writeCsMemo(req));
+    }
+
+    @GetMapping("/memo/detail")
+    @ApiOperation(value = "메모 이력 조회")
+    public List<MemoDetailRes> csMemoDetailList(@RequestParam String loginId) throws Exception{
+        return csService.selectCsMemoDetailList(loginId);
     }
 }

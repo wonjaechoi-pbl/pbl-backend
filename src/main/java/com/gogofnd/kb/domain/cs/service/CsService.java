@@ -79,7 +79,7 @@ public class CsService {
         return new PagingResponse<>(csRepositorySupport.selectKbBalanceHistoryList(pageable, req));
     }
 
-    // 라이더 메모 Insert
+    // 메모 작성
     public String writeCsMemo(RiderCsMemoReq req) throws Exception {
 
         Rider rider = csRepositorySupport.findByRiderLoginId(req.getLoginId());
@@ -88,5 +88,11 @@ public class CsService {
         riderCsMemoRepository.save(result);
 
         return "Y";
+    }
+
+    // 메모 이력 조회
+    public List<MemoDetailRes> selectCsMemoDetailList(String loginId) throws Exception {
+
+        return csRepositorySupport.selectCsMemoDetailList(loginId);
     }
 }
