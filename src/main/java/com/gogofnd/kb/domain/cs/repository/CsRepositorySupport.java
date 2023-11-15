@@ -89,7 +89,7 @@ public class CsRepositorySupport {
                         rider.birthDate.as("birthDate"),
                         rider.mtdt.as("mtdt"),
                         rider.createdDate.as("createdDate"),
-                        rider.vcNumber.as("vcNumber"),
+                        rider.vcNumber.as("vcnoHnglNm"),
                         rider.insuranceStatus.as("insuranceStatus"),
                         rider.imagePath.as("imagePath"),
                         Expressions.cases()
@@ -105,8 +105,8 @@ public class CsRepositorySupport {
                                 .when(rider.insuranceStatus.eq("082")).then("기명취소 완료")
                                 .when(rider.insuranceStatus.eq("083")).then("기명취소 거절")
                                 .otherwise(rejectMessage1.rejectMessage)
-                                .as("status_name"),
-                        rejectMessage1.rejectMessage.as("reject_message"),
+                                .as("statusName"),
+                        rejectMessage1.rejectMessage.as("rejectMessage"),
                         rider.memo.as("memo"),
                         rider.memoWriter.as("memoWriter"),
                         rider.totalWebViewUrl.as("totalWebViewUrl")
@@ -161,8 +161,8 @@ public class CsRepositorySupport {
                                 .when(history.status.eq("082")).then("기명취소 완료")
                                 .when(history.status.eq("083")).then("기명취소 거절")
                                 .otherwise(rejectMessage1.rejectMessage)
-                                .as("status_name"),
-                        rejectMessage1.rejectMessage.as("reject_message"),
+                                .as("statusName"),
+                        rejectMessage1.rejectMessage.as("rejectMessage"),
                         history.effectiveStartDate.as("effectiveStartDate"),
                         history.effectiveEndDate.as("effectiveEndDate"),
                         history.until.as("until")
@@ -175,7 +175,7 @@ public class CsRepositorySupport {
                 .fetch();
     }
 
-    // 보험 가입 상태 List 조회
+    // 라이더 정보 상세 조회
     public RiderInfoDetailRes selectRiderInfoDetail(String loginId) {
 
         return queryFactory
@@ -435,6 +435,7 @@ public class CsRepositorySupport {
         return new PageImpl<>(result, pageable, totalCount);
     }
 
+    // 운영사 정보 상세 조회
     public SellerInfoDetailRes selectSellerInfoDetail(String cmpcd) {
         return queryFactory
                 .select(Projections.fields(SellerInfoDetailRes.class,

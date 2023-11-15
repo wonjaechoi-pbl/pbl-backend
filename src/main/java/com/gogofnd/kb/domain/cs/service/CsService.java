@@ -32,7 +32,7 @@ public class CsService {
         return csRepositorySupport.selectInsureHistoryDetailList(loginId);
     }
 
-    // 보험 가입 상태 이력 List 조회
+    // 라이더 정보 상세 조회
     public RiderInfoDetailRes selectRiderInfoDetail(String loginId) throws Exception {
 
         return csRepositorySupport.selectRiderInfoDetail(loginId);
@@ -62,7 +62,7 @@ public class CsService {
         return new PagingResponse<>(csRepositorySupport.selectSellerList(pageable, req));
     }
 
-    // 운영사 List 조회
+    // 운영사 정보 상세 조회
     public SellerInfoDetailRes selectSellerInfoDetail(String cmpcd) throws Exception {
 
         return csRepositorySupport.selectSellerInfoDetail(cmpcd);
