@@ -1,10 +1,13 @@
 package com.gogofnd.kb.domain.cs.api;
 
+import com.gogofnd.kb.business.dto.req.AddHistoryReq;
 import com.gogofnd.kb.domain.cs.dto.req.*;
 import com.gogofnd.kb.domain.cs.dto.res.*;
 import com.gogofnd.kb.domain.cs.service.CsService;
+import com.gogofnd.kb.domain.rider.service.RiderService;
 import com.gogofnd.kb.global.dto.request.MyPageRequest;
 import com.gogofnd.kb.global.dto.response.ApiPagingResponse;
+import com.gogofnd.kb.global.dto.response.ApiResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,7 @@ import java.util.List;
 public class CsController {
 
     private final CsService csService;
+    private final RiderService riderService;
 
     @GetMapping("/insurance/list")
     @ApiOperation(value = "보험 가입 상태 List 조회")
@@ -97,5 +101,18 @@ public class CsController {
             KbBalanceHistoryReq req
     ) throws Exception{
         return new ApiPagingResponse<>(csService.selectKbBalanceHistoryList(new MyPageRequest(page,limit).of(), req));
+    }
+
+    @PostMapping("/add/history")
+    @ApiOperation(value = "history 추가")
+    public ApiResponse<String> addUnderwritingHistory(@RequestBody AddHistoryReq req) {
+
+        return new ApiResponse<>(riderService.addHistory(req));
+    }
+
+    @DeleteMapping("/rider/{riderId}")
+    @ApiOperation(value="라이더 삭제")
+    public ApiResponse<String> deleteRider(@PathVariable Long riderId){
+        return new ApiResponse<>(riderService.deleteRider(riderId));
     }
 }
