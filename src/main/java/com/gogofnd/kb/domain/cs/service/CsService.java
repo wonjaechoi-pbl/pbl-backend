@@ -1,8 +1,12 @@
 package com.gogofnd.kb.domain.cs.service;
 
+import com.gogofnd.kb.business.dto.req.RiderCsMemoReq;
 import com.gogofnd.kb.domain.cs.dto.req.*;
 import com.gogofnd.kb.domain.cs.dto.res.*;
 import com.gogofnd.kb.domain.cs.repository.CsRepositorySupport;
+import com.gogofnd.kb.domain.rider.entity.Rider;
+import com.gogofnd.kb.domain.rider.entity.RiderCsMemo;
+import com.gogofnd.kb.domain.rider.repository.RiderCsMemoRepository;
 import com.gogofnd.kb.global.dto.response.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +23,7 @@ import java.util.List;
 @Transactional
 public class CsService {
     private final CsRepositorySupport csRepositorySupport;
+    private final RiderCsMemoRepository riderCsMemoRepository;
 
     // 보험 가입 상태 List 조회
     public PagingResponse<InsureHistoryRes> selectInsureHistoryList(Pageable pageable, InsureHistoryReq req) throws Exception {
@@ -72,5 +77,16 @@ public class CsService {
     public PagingResponse<KbBalanceHistoryRes> selectKbBalanceHistoryList(Pageable pageable, KbBalanceHistoryReq req) throws Exception {
 
         return new PagingResponse<>(csRepositorySupport.selectKbBalanceHistoryList(pageable, req));
+    }
+
+    // 라이더 메모 Insert
+    public String writeCsMemo(RiderCsMemoReq req) throws Exception {
+
+        Rider rider = csRepositorySupport.findByRiderLoginId(req.getLoginId());
+        RiderCsMemo result = RiderCsMemo.create(req, rider);
+
+        riderCsMemoRepository.save(result);
+
+        return "Y";
     }
 }

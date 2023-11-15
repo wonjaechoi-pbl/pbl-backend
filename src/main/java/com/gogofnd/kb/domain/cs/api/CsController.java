@@ -1,6 +1,7 @@
 package com.gogofnd.kb.domain.cs.api;
 
 import com.gogofnd.kb.business.dto.req.AddHistoryReq;
+import com.gogofnd.kb.business.dto.req.RiderCsMemoReq;
 import com.gogofnd.kb.domain.cs.dto.req.*;
 import com.gogofnd.kb.domain.cs.dto.res.*;
 import com.gogofnd.kb.domain.cs.service.CsService;
@@ -114,5 +115,11 @@ public class CsController {
     @ApiOperation(value="라이더 삭제")
     public ApiResponse<String> deleteRider(@PathVariable Long riderId){
         return new ApiResponse<>(riderService.deleteRider(riderId));
+    }
+
+    @PostMapping("/memo/write")
+    @ApiOperation(value = "시간제 라이더 메모", notes="시간제 가입 상태 List 화면에서 메모를 작성 할 수 있는 기능")
+    public ApiResponse<String> writeRiderCsMemo(@RequestBody RiderCsMemoReq req) throws Exception {
+        return new ApiResponse<>(csService.writeCsMemo(req));
     }
 }

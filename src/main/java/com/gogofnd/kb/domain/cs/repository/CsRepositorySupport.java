@@ -3,6 +3,9 @@ package com.gogofnd.kb.domain.cs.repository;
 
 import com.gogofnd.kb.domain.cs.dto.req.*;
 import com.gogofnd.kb.domain.cs.dto.res.*;
+import com.gogofnd.kb.domain.rider.entity.Rider;
+import com.gogofnd.kb.global.error.exception.BusinessException;
+import com.gogofnd.kb.global.error.model.ErrorCode;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -38,17 +41,17 @@ public class CsRepositorySupport {
     private final JPAQueryFactory queryFactory;
 
 //     로그인 ID로 Rider 조회
-//    public Rider findByRiderLoginId(String loginId){
-//        Rider resultRider = queryFactory
-//                .selectFrom(rider)
-//                .where(rider.loginId.eq(loginId))
-//                .fetchOne();
-//
-//        if(resultRider == null){
-//            throw new BusinessException(ErrorCode.NOT_FOUND_USER);
-//        }
-//        return resultRider;
-//    }
+    public Rider findByRiderLoginId(String loginId){
+        Rider resultRider = queryFactory
+                .selectFrom(rider)
+                .where(rider.loginId.eq(loginId))
+                .fetchOne();
+
+        if(resultRider == null){
+            throw new BusinessException(ErrorCode.NOT_FOUND_USER);
+        }
+        return resultRider;
+    }
 
     // 보험 가입 상태 List 조회
     public Page<InsureHistoryRes> selectInsureHistoryList(Pageable pageable, InsureHistoryReq req) {
