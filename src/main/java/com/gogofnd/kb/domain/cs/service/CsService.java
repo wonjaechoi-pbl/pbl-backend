@@ -95,4 +95,12 @@ public class CsService {
 
         return csRepositorySupport.selectCsMemoDetailList(loginId);
     }
+
+    // 메모 수정
+    public String updateCsMemo(UpdateCsMemoReq req) throws Exception {
+
+        csRepositorySupport.updateCsMemo(req);
+
+        return "Y";
+    }
 }

@@ -528,6 +528,16 @@ public class CsRepositorySupport {
                 .fetch();
     }
 
+    public void updateCsMemo(UpdateCsMemoReq req) {
+        queryFactory
+                .update(riderCsMemo)
+                .set(riderCsMemo.writer, req.getWriter())
+                .set(riderCsMemo.content, req.getContent())
+                .set(riderCsMemo.modifiedDate, LocalDateTime.now())
+                .where(riderCsMemo.id.eq(req.getId()))
+                .execute();
+    }
+
     private LocalDateTime stringToDateTime(String dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

@@ -128,4 +128,10 @@ public class CsController {
     public List<MemoDetailRes> csMemoDetailList(@RequestParam String loginId) throws Exception{
         return csService.selectCsMemoDetailList(loginId);
     }
+
+    @PostMapping("/memo/update")
+    @ApiOperation(value = "메모 수정")
+    public ApiResponse<String> csMemoUpdate(@RequestBody UpdateCsMemoReq req) throws Exception {
+        return new ApiResponse<>(csService.updateCsMemo(req));
+    }
 }
