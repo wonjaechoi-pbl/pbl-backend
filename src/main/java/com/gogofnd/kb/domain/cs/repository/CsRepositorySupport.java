@@ -29,6 +29,7 @@ import static com.gogofnd.kb.domain.seller.entity.QCallSettlement.callSettlement
 import static com.gogofnd.kb.domain.seller.entity.QSeller.seller;
 import static com.gogofnd.kb.domain.delivery.entity.QAccident.accident;
 import static com.gogofnd.kb.domain.delivery.entity.QKbBalancesHistory.kbBalancesHistory;
+import static com.gogofnd.kb.domain.insurance.entity.QHistory.history;
 
 @RequiredArgsConstructor
 @Repository
@@ -137,6 +138,40 @@ public class CsRepositorySupport {
                         .fetch()
                         .size();
         return new PageImpl<>(resultRiderCs, pageable, totalCount);
+    }
+
+    // 보험 가입 상태 List 조회
+    public List<InsureHistoryDetailRes> selectInsureHistoryDetailList(String loginId) {
+
+        return queryFactory
+                .select(Projections.fields(InsureHistoryDetailRes.class,
+                        history.rider.name.as("name"),
+                        history.createdDate.as("createdDate"),
+                        history.status.as("status"),
+                        Expressions.cases()
+                                .when(history.status.eq("011")).then("가입설계동의 요청")
+                                .when(history.status.eq("021")).then("인수심사 진행 중")
+                                .when(history.status.eq("033")).then("인수심사 거절")
+                                .when(history.status.eq("034")).then("인수심사 보류")
+                                .when(history.status.eq("041")).then("계약체결동의 요청")
+                                .when(history.status.eq("051")).then("기명요청 진행 중")
+                                .when(history.status.eq("062")).then("기명요청 완료")
+                                .when(history.status.eq("063")).then("기명요청 거절")
+                                .when(history.status.eq("071")).then("기명취소 요청")
+                                .when(history.status.eq("082")).then("기명취소 완료")
+                                .when(history.status.eq("083")).then("기명취소 거절")
+                                .otherwise(rejectMessage1.rejectMessage)
+                                .as("status_name"),
+                        rejectMessage1.rejectMessage.as("reject_message"),
+                        history.effectiveStartDate.as("effectiveStartDate"),
+                        history.effectiveEndDate.as("effectiveEndDate"),
+                        history.until.as("until")
+                ))
+                .from(history)
+                .leftJoin(rejectReason1).on(history.rider.id.eq(rejectReason1.rider.id))
+                .leftJoin(rejectMessage1).on(rejectReason1.rejectReason.eq(rejectMessage1.rejectReason))
+                .orderBy(history.createdDate.desc())
+                .fetch();
     }
 
     // 실시간 운행 이력 List 조회

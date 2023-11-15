@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Slf4j
 @Service
@@ -22,6 +24,12 @@ public class CsService {
     public PagingResponse<InsureHistoryRes> selectInsureHistoryList(Pageable pageable, InsureHistoryReq req) throws Exception {
 
         return new PagingResponse<>(csRepositorySupport.selectInsureHistoryList(pageable, req));
+    }
+
+    // 보험 가입 상태 이력 List 조회
+    public List<InsureHistoryDetailRes> selectInsureHistoryDetailList(String loginId) throws Exception {
+
+        return csRepositorySupport.selectInsureHistoryDetailList(loginId);
     }
 
     // 실시간 운행 이력 List 조회

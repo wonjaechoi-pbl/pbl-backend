@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 // CS 화면을 위한 controller
 @Slf4j
 @RequiredArgsConstructor
@@ -27,6 +29,12 @@ public class CsController {
             InsureHistoryReq req
     ) throws Exception{
         return new ApiPagingResponse<>(csService.selectInsureHistoryList(new MyPageRequest(page,limit).of(), req));
+    }
+
+    @GetMapping("/insurance/detail")
+    @ApiOperation(value = "보험 가입 상태 이력 List 조회")
+    public List<InsureHistoryDetailRes> InsureHistoryDetailList(@RequestParam String loginId) throws Exception{
+        return csService.selectInsureHistoryDetailList(loginId);
     }
 
     @GetMapping("/calls/list")
